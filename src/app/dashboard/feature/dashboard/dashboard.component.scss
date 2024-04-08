@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+
+mat-sidenav-content {
+  display: flex;
+  justify-content: center;
+  min-height: 90vh;
+  background-color: white;
+}
