@@ -2,13 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
+  OnInit,
   computed,
   input,
   output,
-  signal,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +16,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { Item } from '../../../shared/interfaces/Item';
 import { MatSelectModule } from '@angular/material/select';
+import { Source } from '../../../shared/interfaces/Source';
+import { docData } from '@angular/fire/firestore';
+import { map } from 'rxjs';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-items-table',
@@ -31,79 +40,130 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     ReactiveFormsModule,
     MatSelectModule,
+    MatIconModule,
+  ],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed,void', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
+    ]),
   ],
   template: `
-    <div class="filters">
-      <mat-form-field appearance="outline" [subscriptSizing]="'dynamic'">
-        <mat-label>Search</mat-label>
-        <input type="text" matInput (input)="search($event)" />
-        <button mat-icon-button matSuffix>
-          <mat-icon>search</mat-icon>
-        </button>
-      </mat-form-field>
-      <mat-form-field appearance="outline" [subscriptSizing]="'dynamic'">
-        <mat-label>Category</mat-label>
-        <mat-select>
-          <mat-option>1</mat-option>
-          <mat-option>2</mat-option>
-          <mat-option>3</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <table mat-table [dataSource]="filteredItems()" class="mat-elevation-z8">
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    <table
+      mat-table
+      multiTemplateDataRows
+      [dataSource]="mappedItems()"
+      class="mat-elevation-z8"
+    >
+      @for (column of displayedColumns(); track column) {
+      <ng-container matColumnDef="{{ column }}">
+        <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+        <td mat-cell *matCellDef="let element">
+          {{ column == 'source' ? element[column].name : element[column] }}
+        </td>
       </ng-container>
-      <ng-container matColumnDef="model">
-        <th mat-header-cell *matHeaderCellDef>Model</th>
-        <td mat-cell *matCellDef="let element">{{ element.model }}</td>
-      </ng-container>
-      <ng-container matColumnDef="cost">
-        <th mat-header-cell *matHeaderCellDef>Cost</th>
-        <td mat-cell *matCellDef="let element">{{ element.cost }}</td>
-      </ng-container>
-      <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef>Amount</th>
-        <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
-      </ng-container>
-      <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef>Total</th>
-        <td mat-cell *matCellDef="let element">{{ element.total }}</td>
-      </ng-container>
-      <ng-container matColumnDef="source">
-        <th mat-header-cell *matHeaderCellDef>Source</th>
-        <td mat-cell *matCellDef="let element">{{ element.source }}</td>
-      </ng-container>
-      <ng-container matColumnDef="condition">
-        <th mat-header-cell *matHeaderCellDef>Condition</th>
-        <td mat-cell *matCellDef="let element">{{ element.condition }}</td>
-      </ng-container>
-      <ng-container matColumnDef="info">
-        <th mat-header-cell *matHeaderCellDef>Info</th>
-        <td mat-cell *matCellDef="let element">{{ element.info }}</td>
-      </ng-container>
-      <ng-container matColumnDef="modified">
-        <th mat-header-cell *matHeaderCellDef>Modified</th>
-        <td mat-cell *matCellDef="let element">{{ element.modified }}</td>
+      }
+
+      <ng-container matColumnDef="expandedDetail">
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [attr.colspan]="displayedColumns().length"
+        >
+          <div
+            class="example-element-detail"
+            [@detailExpand]="
+              element == expandedElement ? 'expanded' : 'collapsed'
+            "
+          >
+            <div class="element-info">
+              @for(column of displayedColumnsExpanded(); track column){
+              <div>
+                <h4>{{ column }}</h4>
+                <span>{{
+                  column == 'source' ? element[column].name : element[column]
+                }}</span>
+              </div>
+              }
+            </div>
+          </div>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+      <tr
+        mat-row
+        *matRowDef="let element; columns: displayedColumns()"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDetail']"
+        class="example-detail-row"
+      ></tr>
     </table>
+    <button
+      class="add-item"
+      color="primary"
+      mat-raised-button
+      (click)="addItem()"
+    >
+      Add item
+    </button>
   `,
   styleUrl: './items-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemsTableComponent {
-  displayedColumns = input.required<string[]>();
-  dataSource = input.required<Item[]>();
-  query = signal('');
-  filteredItems = computed(() =>
-    this.dataSource().filter(({ name }) => name.startsWith(this.query()))
+  columns = [
+    'name',
+    'model',
+    'cost',
+    'amount',
+    'total',
+    'source',
+    'condition',
+    'modified',
+    'modifiedBy',
+    'info',
+  ];
+  displayedColumns = computed(() =>
+    this.isGtSm() ? this.columns.slice(0, -3) : this.columns.slice(0, -6)
   );
+  displayedColumnsExpanded = computed(() =>
+    this.isGtSm() ? this.columns.slice(-3) : this.columns.slice(-6)
+  );
+  isGtSm = input.required<boolean>();
+  dataSource = input.required<Item[]>();
+  name = input.required<string>();
+  source = input.required<string>();
+  onAddItem = output<void>();
 
-  search(e: Event) {
-    this.query.set((e.target as HTMLInputElement).value);
+  expandedElement: Item | null = null;
+
+  filteredItems = computed(() =>
+    this.dataSource().filter(({ name }) =>
+      name ? name.toLowerCase().startsWith(this.name().toLowerCase()) : null
+    )
+  );
+  filteredBySource = computed(() =>
+    this.filteredItems().filter((i) =>
+      this.source() ? this.source() == i.source.id : i
+    )
+  );
+  mappedItems = computed(() =>
+    this.filteredBySource().map((i) => ({
+      ...i,
+      total: i.amount * i.cost,
+    }))
+  );
+  addItem() {
+    this.onAddItem.emit();
   }
 }

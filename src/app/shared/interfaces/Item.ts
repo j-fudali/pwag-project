@@ -1,11 +1,13 @@
+import { Source } from './Source';
+
 export interface Item {
   name: string;
   model: string;
   cost: number;
   amount: number;
-  total: number;
-  source: string;
+  source: Source;
   condition: string;
   info: string;
   modified: string;
+  modifiedBy: string;
 }

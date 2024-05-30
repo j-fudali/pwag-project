@@ -19,10 +19,8 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () =>
-      import('./dashboard/feature/dashboard/dashboard.component').then(
-        (c) => c.DashboardComponent
-      ),
+    loadChildren: () =>
+      import('./dashboard/feature/dashboard-shell/dashboard.routes'),
     canActivate: [AuthGuard],
     data: {
       authGuardPipe: redirectUnauthorizedToLogin,

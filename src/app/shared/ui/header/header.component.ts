@@ -6,6 +6,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  computed,
   effect,
   input,
   output,
@@ -14,6 +15,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { User } from '@angular/fire/auth';
 import { MatIconModule } from '@angular/material/icon';
+import { UserCredentials } from '../../interfaces/UserCredentials';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -26,15 +28,14 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   template: `
     <mat-toolbar color="primary">
-      @if(showToggleButton()){
+      @if(showMore()){
       <button mat-icon-button (click)="toggleSidenav()">
         <mat-icon>menu</mat-icon>
       </button>
       }
-      <span>Inventory managment</span>
+      <span>Inventory @if(isGtSm()){managment}</span>
       <span class="spacer"></span>
-      @if (currentUser()) {
-      <span class="username">{{ currentUser()!.email }}</span>
+      @if(currentUser()){
       <button (click)="signOut()" color="accent" mat-flat-button>
         Log out
       </button>
@@ -45,10 +46,11 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  currentUser = input.required<User | null>();
-  showToggleButton = input.required<boolean>();
+  currentUser = input.required<UserCredentials | null | undefined>();
+  isGtSm = input.required<boolean>();
   onSignOut = output<void>();
   onToggleSidenav = output<void>();
+  showMore = computed(() => !this.isGtSm() && this.currentUser());
   signOut() {
     this.onSignOut.emit();
   }

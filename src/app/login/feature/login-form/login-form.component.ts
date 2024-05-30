@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, effect, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -14,6 +14,8 @@ import { AuthService } from '../../../shared/data-access/auth.service';
 import { of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-login-form',
   standalone: true,
@@ -25,14 +27,15 @@ import { Router, RouterModule } from '@angular/router';
     ReactiveFormsModule,
     MatButtonModule,
     RouterModule,
+    MatProgressSpinnerModule,
   ],
   template: `
     <mat-card>
       <mat-card-header>
         <h1 mat-card-title>Log-in</h1>
       </mat-card-header>
-      <mat-card-content>
-        <form [formGroup]="loginForm">
+      <form [formGroup]="loginForm">
+        <mat-card-content>
           <mat-form-field>
             <mat-label>E-mail</mat-label>
             <input type="email" matInput formControlName="email" />
@@ -41,25 +44,28 @@ import { Router, RouterModule } from '@angular/router';
             <mat-label>Password</mat-label>
             <input type="password" matInput formControlName="password" />
           </mat-form-field>
-        </form>
-      </mat-card-content>
-      <mat-card-actions>
-        <button
-          mat-flat-button
-          (click)="login()"
-          [disabled]="loginForm.invalid"
-        >
-          Submit
-        </button>
-      </mat-card-actions>
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            mat-flat-button
+            (click)="login()"
+            [disabled]="loginForm.invalid"
+          >
+            @if(status() === 'loading'){
+            <mat-spinner [diameter]="30"></mat-spinner>
+            }@else { Submit }
+          </button>
+        </mat-card-actions>
+      </form>
     </mat-card>
   `,
   styleUrl: './login-form.component.scss',
 })
 export class LoginFormComponent {
   private _authService = inject(AuthService);
-  private _destroyRef = inject(DestroyRef);
-  private _router = inject(Router);
+  private snackbar = inject(MatSnackBar);
+  status = this._authService.state.status;
+  error = this._authService.state.error;
   loginForm = new FormGroup({
     email: new FormControl('', {
       nonNullable: true,
@@ -76,10 +82,20 @@ export class LoginFormComponent {
   get password() {
     return this.loginForm.get('password') as FormControl<string>;
   }
+
+  constructor() {
+    effect(() => {
+      if (this.status() == 'error') {
+        if (this.error() == 'auth/invalid-credential') {
+          this.snackbar.open('Invalid credentials', 'X', { duration: 3000 });
+        }
+      }
+    });
+  }
   public login() {
-    this._authService
-      .login(this.email.value, this.password.value)
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe(() => this._router.navigate(['/dashboard']));
+    this._authService.login$.next({
+      email: this.email.value,
+      password: this.password.value,
+    });
   }
 }

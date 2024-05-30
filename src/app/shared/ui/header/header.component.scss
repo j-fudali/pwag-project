@@ -1,7 +1,11 @@
 :host {
   display: block;
+  height: 10vh;
+}
+mat-toolbar {
+  height: 100%;
 }
 .username {
   font-size: 16px;
-  margin-right: 5px;
+  margin-right: 10px;
 }
