@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+form {
+  display: grid;
+  gap: 5px;
+  grid-auto-rows: auto;
+  mat-form-field:last-child {
+    grid-column: 1/-1;
+  }
+}
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+textarea {
+  resize: none;
+}
+.invoices {
+  span {
+    font-size: large;
+  }
+  border: dotted 2px black;
+  border-radius: 15px;
+  padding: 10px;
+}
+.images-upload {
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+}
+.upload-btn {
+  align-self: center;
+}
+input[type="file"] {
+  display: none;
+}
+mat-list {
+  padding: 0;
+}

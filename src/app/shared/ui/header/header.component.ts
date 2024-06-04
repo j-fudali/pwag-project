@@ -2,18 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
   computed,
-  effect,
   input,
   output,
 } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { User } from '@angular/fire/auth';
 import { MatIconModule } from '@angular/material/icon';
 import { UserCredentials } from '../../interfaces/UserCredentials';
 @Component({
@@ -27,7 +21,7 @@ import { UserCredentials } from '../../interfaces/UserCredentials';
     MatIconModule,
   ],
   template: `
-    <mat-toolbar color="primary">
+    <mat-toolbar>
       @if(showMore()){
       <button mat-icon-button (click)="toggleSidenav()">
         <mat-icon>menu</mat-icon>
@@ -47,7 +41,7 @@ import { UserCredentials } from '../../interfaces/UserCredentials';
 })
 export class HeaderComponent {
   currentUser = input.required<UserCredentials | null | undefined>();
-  isGtSm = input.required<boolean>();
+  isGtSm = input.required<boolean | undefined>();
   onSignOut = output<void>();
   onToggleSidenav = output<void>();
   showMore = computed(() => !this.isGtSm() && this.currentUser());

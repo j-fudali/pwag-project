@@ -1,6 +1,7 @@
 import { DocumentReference, Timestamp } from '@angular/fire/firestore';
 
 export interface ItemDoc {
+  id?: string;
   name: string;
   model: string;
   cost: number;
@@ -10,4 +11,5 @@ export interface ItemDoc {
   info: string;
   modified: Timestamp;
   modifiedBy: string;
+  invoices?: string[];
 }

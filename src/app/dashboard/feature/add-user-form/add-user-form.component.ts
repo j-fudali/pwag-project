@@ -35,6 +35,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatTooltipModule,
     MatProgressSpinnerModule,
   ],
+  providers: [UsersService],
   template: `
     <mat-card [style.width]="isGtSm() ? 'auto' : '100%'">
       <mat-card-header>
@@ -158,6 +159,7 @@ export class AddUserFormComponent {
         this._snackbar.open('User has been added', 'X', { duration: 3000 });
       }
       if (this._usersService.state.status() == 'error') {
+        console.log(this.error());
         this._snackbar.open(this.error()!, 'X', { duration: 3000 });
       }
     });

@@ -8,10 +8,10 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { Source } from '../../../shared/interfaces/Source';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Source } from '../../../shared/interfaces/Source';
 
 @Component({
   selector: 'app-filters',

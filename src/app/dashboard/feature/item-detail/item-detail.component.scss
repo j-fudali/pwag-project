@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+mat-card-content {
+  height: 40vh;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+mat-card-actions {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+}
+mat-list {
+  overflow-y: auto;
+}

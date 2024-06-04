@@ -11,8 +11,8 @@ import {
   of,
   shareReplay,
 } from 'rxjs';
-import { Source } from '../../shared/interfaces/Source';
 import { FirebaseError } from '@angular/fire/app';
+import { Source } from '../../shared/interfaces/Source';
 
 export interface SourcesState {
   sources: Signal<Source[]>;

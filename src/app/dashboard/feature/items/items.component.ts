@@ -11,19 +11,33 @@ import { ItemsTableComponent } from '../../ui/items-table/items-table.component'
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EMPTY, map, switchMap, tap } from 'rxjs';
 import { NewItem } from '../../../shared/interfaces/NewItem';
-import { AddItemDialogComponent } from '../../ui/add-item-dialog/add-item-dialog.component';
+import { ItemDialogComponent } from '../../ui/item-dialog/item-dialog.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { SourcesService } from '../../data-access/sources.service';
 import { ItemsService } from '../../data-access/items.service';
 import { FiltersComponent } from '../../ui/filters/filters.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-items',
   standalone: true,
-  imports: [CommonModule, ItemsTableComponent, FiltersComponent],
+  imports: [
+    CommonModule,
+    ItemsTableComponent,
+    FiltersComponent,
+    MatButtonModule,
+    MatProgressBarModule,
+  ],
   template: `
+    @if(itemAdded() === 'loading'){
+    <mat-progress-bar mode="indeterminate" />
+    }
+    <button class="add-item" mat-raised-button (click)="addItem()">
+      Add item
+    </button>
     <app-filters
       [sources]="sources()"
       [isGtSm]="isGtSm()"
@@ -44,7 +58,6 @@ export class ItemsComponent {
   private _sourcesService = inject(SourcesService);
   private _itemsService = inject(ItemsService);
   private _breakpointObs = inject(BreakpointObserver);
-  private snackbar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
   itemAdded = this._itemsService.state.itemAdded;
   items = this._itemsService.state.items;
@@ -57,25 +70,9 @@ export class ItemsComponent {
   );
   name: string = '';
   source: string = '';
-  constructor() {
-    effect(() => {
-      if (this.itemAdded()) {
-        this.snackbar.open('Item has been addded', 'X', { duration: 3000 });
-      }
-      if (this._sourcesService.state.status() == 'error') {
-        this.snackbar.open(this._sourcesService.state.error()!, 'X', {
-          duration: 3000,
-        });
-      }
-      if (this._itemsService.state.status() == 'error') {
-        this.snackbar.open(this._itemsService.state.error()!, 'X', {
-          duration: 3000,
-        });
-      }
-    });
-  }
+
   addItem() {
-    const dialogRef = this.dialog.open(AddItemDialogComponent, {
+    const dialogRef = this.dialog.open(ItemDialogComponent, {
       data: { isGtSm: this.isGtSm, sources: this.sources },
     });
     dialogRef

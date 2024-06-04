@@ -1,6 +1,7 @@
 import { Source } from './Source';
 
 export interface Item {
+  id: string;
   name: string;
   model: string;
   cost: number;
@@ -10,4 +11,6 @@ export interface Item {
   info: string;
   modified: string;
   modifiedBy: string;
+  invoices?: string[];
 }
+export type SingleItem = Omit<Item, 'id'>;

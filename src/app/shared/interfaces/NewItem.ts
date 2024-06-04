@@ -6,4 +6,5 @@ export interface NewItem {
   source: string;
   condition: string;
   info: string;
+  invoices: File[];
 }

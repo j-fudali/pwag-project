@@ -2,10 +2,8 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   computed,
   input,
-  output,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,9 +14,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { Item } from '../../../shared/interfaces/Item';
 import { MatSelectModule } from '@angular/material/select';
-import { Source } from '../../../shared/interfaces/Source';
-import { docData } from '@angular/fire/firestore';
-import { map } from 'rxjs';
 import {
   animate,
   state,
@@ -26,6 +21,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { RouterModule } from '@angular/router';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
 
 @Component({
   selector: 'app-items-table',
@@ -41,6 +39,8 @@ import {
     ReactiveFormsModule,
     MatSelectModule,
     MatIconModule,
+    RouterModule,
+    MapConditionsPipe,
   ],
   animations: [
     trigger('detailExpand', [
@@ -53,17 +53,19 @@ import {
     ]),
   ],
   template: `
-    <table
-      mat-table
-      multiTemplateDataRows
-      [dataSource]="mappedItems()"
-      class="mat-elevation-z8"
-    >
+    @if(mappedItems().length > 0){
+    <table mat-table multiTemplateDataRows [dataSource]="mappedItems()">
       @for (column of displayedColumns(); track column) {
       <ng-container matColumnDef="{{ column }}">
         <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
         <td mat-cell *matCellDef="let element">
-          {{ column == 'source' ? element[column].name : element[column] }}
+          {{
+            column == 'source'
+              ? element[column].name
+              : column == 'condition'
+              ? (element[column] | appMapConditions)
+              : element[column]
+          }}
         </td>
       </ng-container>
       }
@@ -81,14 +83,23 @@ import {
             "
           >
             <div class="element-info">
-              @for(column of displayedColumnsExpanded(); track column){
               <div>
-                <h4>{{ column }}</h4>
-                <span>{{
-                  column == 'source' ? element[column].name : element[column]
-                }}</span>
+                @for(column of displayedColumnsExpanded(); track column){
+                <div>
+                  <span>{{ column }}: </span>
+                  <span>
+                    {{
+                      column == 'source'
+                        ? element[column].name
+                        : column == 'condition'
+                        ? (element[column] | appMapConditions)
+                        : element[column]
+                    }}</span
+                  >
+                </div>
+                }
               </div>
-              }
+              <a mat-stroked-button [routerLink]="[element['id']]">Details</a>
             </div>
           </div>
         </td>
@@ -108,14 +119,9 @@ import {
         class="example-detail-row"
       ></tr>
     </table>
-    <button
-      class="add-item"
-      color="primary"
-      mat-raised-button
-      (click)="addItem()"
-    >
-      Add item
-    </button>
+    } @else {
+    <h3>No items found</h3>
+    }
   `,
   styleUrl: './items-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -134,16 +140,15 @@ export class ItemsTableComponent {
     'info',
   ];
   displayedColumns = computed(() =>
-    this.isGtSm() ? this.columns.slice(0, -3) : this.columns.slice(0, -6)
+    this.isGtSm() ? this.columns.slice(0, -4) : this.columns.slice(0, -6)
   );
   displayedColumnsExpanded = computed(() =>
-    this.isGtSm() ? this.columns.slice(-3) : this.columns.slice(-6)
+    this.isGtSm() ? this.columns.slice(-4) : this.columns.slice(-6)
   );
   isGtSm = input.required<boolean>();
   dataSource = input.required<Item[]>();
   name = input.required<string>();
   source = input.required<string>();
-  onAddItem = output<void>();
 
   expandedElement: Item | null = null;
 
@@ -163,7 +168,4 @@ export class ItemsTableComponent {
       total: i.amount * i.cost,
     }))
   );
-  addItem() {
-    this.onAddItem.emit();
-  }
 }

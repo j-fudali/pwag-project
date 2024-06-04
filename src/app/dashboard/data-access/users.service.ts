@@ -52,10 +52,7 @@ export class UsersService {
       if (!result) return of(null);
       const { user, email, userCredentials } = result;
       return from(
-        setDoc(doc(this._firestore, `/users/${user.user.uid}`), {
-          email,
-          ...userCredentials,
-        })
+        setDoc(doc(this._firestore, `/users/${user.user.uid}`), userCredentials)
       ).pipe(
         map(() => user.user),
         catchError((err) => {
@@ -64,7 +61,7 @@ export class UsersService {
         })
       );
     }),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay(1)
   );
   private status$ = merge(
     this.addUser$.pipe(map(() => 'loading' as const)),

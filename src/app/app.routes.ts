@@ -26,6 +26,7 @@ export const routes: Routes = [
       authGuardPipe: redirectUnauthorizedToLogin,
     },
   },
+
   {
     path: '',
     redirectTo: '/login',
