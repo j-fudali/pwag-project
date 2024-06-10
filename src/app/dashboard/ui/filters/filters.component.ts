@@ -34,7 +34,7 @@ import { Source } from '../../../shared/interfaces/Source';
       appearance="outline"
       [subscriptSizing]="'dynamic'"
     >
-      <mat-label>Search</mat-label>
+      <mat-label i18n>Search</mat-label>
       <input
         [formControl]="name"
         type="text"
@@ -50,13 +50,15 @@ import { Source } from '../../../shared/interfaces/Source';
       appearance="outline"
       [subscriptSizing]="'dynamic'"
     >
-      <mat-label>Source</mat-label>
+      <mat-label i18n>Source</mat-label>
       <mat-select
         [formControl]="source"
         (selectionChange)="onSourceSelect($event)"
       >
         @for (source of sources(); track $index) {
-        <mat-option [value]="source.id">{{ source.name }}</mat-option>
+        <mat-option [value]="source.id">{{
+          isPolish ? source.name_pl : source.name
+        }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -68,6 +70,8 @@ import { Source } from '../../../shared/interfaces/Source';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FiltersComponent {
+  private url = location.href;
+  isPolish = this.url.includes('4201');
   name = new FormControl('');
   source = new FormControl('');
   isGtSm = input.required<boolean>();

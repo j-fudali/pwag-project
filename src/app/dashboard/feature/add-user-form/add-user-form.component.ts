@@ -39,38 +39,42 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   template: `
     <mat-card [style.width]="isGtSm() ? 'auto' : '100%'">
       <mat-card-header>
-        <h1 mat-card-title>Create user</h1>
+        <h1 mat-card-title i18n>Create user</h1>
       </mat-card-header>
       <form [formGroup]="addUserForm" (ngSubmit)="addUser()">
         <mat-card-content
           [style]="{ gridTemplateColumns: isGtSm() ? '1fr 1fr' : '1fr' }"
         >
           <mat-form-field>
-            <mat-label>Username</mat-label>
+            <mat-label i18n>Username</mat-label>
             <input type="text" matInput formControlName="username" />
             @if(username.hasError('required') && (username.touched ||
             username.dirty)){
-            <mat-error>Field is required</mat-error>
+            <mat-error i18n>Field is required</mat-error>
             }
           </mat-form-field>
           <mat-form-field>
-            <mat-label>E-mail</mat-label>
+            <mat-label i18n>E-mail</mat-label>
             <input type="email" matInput formControlName="email" />
             @if(email.invalid && (email.touched || email.dirty)){
             <mat-error
-              >@if(email.hasError('required')){Field is required}@else{It is not
-              a valid e-mail}</mat-error
+              >@if(email.hasError('required')){<ng-container i18n
+                >Field is required</ng-container
+              >}@else{<ng-container i18n>It is not a valid e-mail</ng-container
+              >}</mat-error
             >
             }
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Password</mat-label>
+            <mat-label i18n>Password</mat-label>
             <input type="password" matInput formControlName="password" />
             @if(password.invalid && (password.touched || password.dirty)){
             <mat-error [style]="{ display: 'flex', alignItems: 'center' }"
-              >@if(password.hasError('required')){Field is required}@else{<span
-                >Password is invalid</span
+              >@if(password.hasError('required')){<ng-container i18n
+                >Field is required</ng-container
+              >}@else{<span i18n>Password is invalid</span
               ><mat-icon
+                i18n-matTooltip
                 matTooltip="Minimum eight characters, at least one letter, one number and one special character"
                 >info</mat-icon
               >}</mat-error
@@ -78,7 +82,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
             }
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Repeat password</mat-label>
+            <mat-label i18n>Repeat password</mat-label>
             <input
               type="password"
               matInput
@@ -88,12 +92,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
             @if(addUserForm.invalid || (rePassword.dirty ||
             rePassword.touched)){
             <mat-error>
-              @if( addUserForm.hasError('notMatch')){ Passwords not match }
-              @else{ Field is required }
+              @if( addUserForm.hasError('notMatch')){<ng-container i18n
+                >Passwords not match</ng-container
+              >
+              } @else{ <ng-container i18n>Field is required</ng-container> }
             </mat-error>
             }
           </mat-form-field>
-          <mat-checkbox formControlName="isAdmin"
+          <mat-checkbox i18n formControlName="isAdmin"
             >Is Administrator</mat-checkbox
           >
         </mat-card-content>
@@ -106,7 +112,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
             @if(status() === 'loading'){<mat-spinner
               [diameter]="30"
             ></mat-spinner>
-            }@else{Submit}
+            }@else{
+            <ng-container i18n>Submit</ng-container>}
           </button>
         </mat-card-actions>
       </form>
@@ -156,10 +163,11 @@ export class AddUserFormComponent {
   constructor() {
     effect(() => {
       if (this._usersService.state.status() === 'added') {
-        this._snackbar.open('User has been added', 'X', { duration: 3000 });
+        this._snackbar.open($localize`User has been added`, 'X', {
+          duration: 3000,
+        });
       }
       if (this._usersService.state.status() == 'error') {
-        console.log(this.error());
         this._snackbar.open(this.error()!, 'X', { duration: 3000 });
       }
     });

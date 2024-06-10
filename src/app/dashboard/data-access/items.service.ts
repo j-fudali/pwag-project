@@ -171,11 +171,15 @@ export class ItemsService {
     this.onDelete$.pipe(
       tap(() => {
         this.router.navigate(['/']);
-        this.snackbar.open(`Item has been deleted`, 'X', { duration: 3000 });
+        this.snackbar.open($localize`Item has been deleted`, 'X', {
+          duration: 3000,
+        });
       }),
       map(() => 'success' as const),
       catchError(() => {
-        this.snackbar.open(`Item has been not edited`, 'X', { duration: 3000 });
+        this.snackbar.open($localize`Item has been not edited`, 'X', {
+          duration: 3000,
+        });
         return of('error' as const);
       })
     )
@@ -184,11 +188,15 @@ export class ItemsService {
     this.edit$.pipe(map(() => 'loading' as const)),
     this.onEdit$.pipe(
       tap(() =>
-        this.snackbar.open(`Item has been edited`, 'X', { duration: 3000 })
+        this.snackbar.open($localize`Item has been edited`, 'X', {
+          duration: 3000,
+        })
       ),
       map(() => 'success' as const),
       catchError(() => {
-        this.snackbar.open(`Item has been not edited`, 'X', { duration: 3000 });
+        this.snackbar.open($localize`Item has been not edited`, 'X', {
+          duration: 3000,
+        });
         return of('error' as const);
       })
     )
@@ -197,11 +205,13 @@ export class ItemsService {
     this.add$.pipe(map(() => 'loading' as const)),
     this.onAdd$.pipe(
       tap(() =>
-        this.snackbar.open(`Item has been added`, 'X', { duration: 3000 })
+        this.snackbar.open($localize`Item has been added`, 'X', {
+          duration: 3000,
+        })
       ),
       map(() => 'success' as const),
       catchError(() => {
-        this.snackbar.open(`Error! Item has been not added`, 'X', {
+        this.snackbar.open($localize`Error! Item has been not added`, 'X', {
           duration: 3000,
         });
         return of('error' as const);
@@ -235,19 +245,9 @@ export class ItemsService {
   private items = toSignal(this.items$, { initialValue: [] });
   private status = toSignal(this.status$, { initialValue: 'loading' });
   private itemAdded = toSignal(this.itemAdded$, { initialValue: null });
-  private error = toSignal(
-    this.error$.pipe(
-      map((err) => {
-        switch (err.code) {
-          default:
-            return err.message;
-        }
-      })
-    ),
-    {
-      initialValue: null,
-    }
-  );
+  private error = toSignal(this.error$.pipe(map((err) => err.message)), {
+    initialValue: null,
+  });
   private selectedItem = toSignal(this.onGetItemById$, { initialValue: null });
   private itemEdited = toSignal(this.itemEdited$, { initialValue: null });
   private itemDeleted = toSignal(this.itemDeleted$, { initialValue: null });

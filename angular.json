@@ -13,10 +13,23 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": {
+          "code": "en-US",
+          "baseHref": ""
+        },
+        "locales": {
+          "pl": {
+            "translation": "src/localize/messages.pl.arb",
+            "baseHref": "/pl"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "localize": true,
             "outputPath": "dist/pwag-project",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -33,7 +46,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -53,6 +66,9 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ]
+            },
+            "pl": {
+              "localize": ["pl"]
             }
           },
           "defaultConfiguration": "production"
@@ -65,6 +81,9 @@
             },
             "development": {
               "buildTarget": "pwag-project:build:development"
+            },
+            "pl": {
+              "buildTarget": "pwag-project:build:development,pl"
             }
           },
           "defaultConfiguration": "development"

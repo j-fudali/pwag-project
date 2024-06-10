@@ -44,18 +44,18 @@ import { Source } from '../../../shared/interfaces/Source';
   ],
   providers: [ExtractFilenamePipe],
   template: `
-    <h2 mat-dialog-title>Add item</h2>
+    <h2 mat-dialog-title>{{ data.initialData ? 'Edit item' : 'Add item' }}</h2>
     <mat-dialog-content>
       <form
         [formGroup]="newItemForm"
         [style.gridTemplateColumns]="data.isGtSm() ? '1fr 1fr' : '1fr'"
       >
         <mat-form-field>
-          <mat-label>Name</mat-label>
+          <mat-label i18n>Name</mat-label>
           <input type="text" matInput formControlName="name" />
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Model</mat-label>
+          <mat-label i18n>Model</mat-label>
           <input type="text" matInput formControlName="model" />
         </mat-form-field>
         <mat-form-field>
@@ -69,7 +69,7 @@ import { Source } from '../../../shared/interfaces/Source';
           />
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Amount</mat-label>
+          <mat-label i18n>Amount</mat-label>
           <input
             type="number"
             matInput
@@ -79,28 +79,30 @@ import { Source } from '../../../shared/interfaces/Source';
           />
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Source</mat-label>
+          <mat-label i18n>Source</mat-label>
           <mat-select formControlName="source">
             @for (source of data.sources(); track $index) {
-            <mat-option [value]="source.id">{{ source.name }}</mat-option>
+            <mat-option [value]="source.id">{{
+              data.isPolish ? source.name_pl : source.name
+            }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Condition</mat-label>
+          <mat-label i18n>Condition</mat-label>
           <mat-select formControlName="condition">
-            <mat-option value="ok">OK</mat-option>
-            <mat-option value="borrowed">Pożyczony</mat-option>
-            <mat-option value="broken">Zniszczony</mat-option>
+            <mat-option i18n value="ok">OK</mat-option>
+            <mat-option i18n value="borrowed">Borrowed</mat-option>
+            <mat-option i18n value="broken">Broken</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Information</mat-label>
+          <mat-label i18n>Information</mat-label>
           <textarea type="text" matInput formControlName="info"></textarea>
         </mat-form-field>
       </form>
       <div class="invoices">
-        <span>Invoices</span>
+        <span i18n>Invoices</span>
         <div
           class="images-upload"
           [style.justifyContent]="invoices.length > 0 ? 'flex-start' : 'center'"
@@ -142,7 +144,7 @@ import { Source } from '../../../shared/interfaces/Source';
             class="upload-btn"
             (click)="uploadFiles.click()"
           >
-            <mat-icon>upload</mat-icon>Upload
+            <mat-icon>upload</mat-icon><ng-container i18n>Upload</ng-container>
           </button>
           <input
             type="file"
@@ -154,7 +156,7 @@ import { Source } from '../../../shared/interfaces/Source';
       </div>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-flat-button (click)="close()">Close</button>
+      <button i18n mat-flat-button (click)="close()">Close</button>
       <button
         mat-raised-button
         [disabled]="newItemForm.invalid"
@@ -165,7 +167,11 @@ import { Source } from '../../../shared/interfaces/Source';
         "
         color="primary"
       >
-        {{ data.initialData ? 'Edit' : 'Add' }}
+        @if(data.initialData){
+        <ng-container i18n>Edit</ng-container>
+        } @else{
+        <ng-container i18n>Add</ng-container>
+        }
       </button>
     </mat-dialog-actions>
   `,
@@ -179,6 +185,7 @@ export class ItemDialogComponent {
   data: {
     isGtSm: Signal<boolean | undefined>;
     sources: Signal<Source[]>;
+    isPolish: boolean;
     initialData?: Signal<Item>;
   } = inject(MAT_DIALOG_DATA);
   newItemForm = this.fb.group({

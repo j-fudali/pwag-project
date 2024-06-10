@@ -78,13 +78,13 @@ export class UsersService {
       map((err) => {
         switch (err.code) {
           case 'auth/invalid-credential':
-            return 'Invalid credentials';
+            return $localize`Invalid credentials`;
           case 'auth/email-already-in-use':
-            return 'E-mail already in use';
+            return $localize`E-mail already in use`;
           case 'permission-denied':
-            return 'You cannot add user';
+            return $localize`You cannot add user`;
           default:
-            return 'Unknown error';
+            return $localize`Unknown error`;
         }
       })
     ),

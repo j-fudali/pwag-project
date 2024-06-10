@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { UserCredentials } from '../../interfaces/UserCredentials';
+import { MatMenuModule } from '@angular/material/menu';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -27,10 +28,13 @@ import { UserCredentials } from '../../interfaces/UserCredentials';
         <mat-icon>menu</mat-icon>
       </button>
       }
-      <span>Inventory @if(isGtSm()){managment}</span>
+      <span i18n>Inventory</span>
+      @if(isGtSm()){ &nbsp;
+      <span i18n>managment</span>
+      }
       <span class="spacer"></span>
       @if(currentUser()){
-      <button (click)="signOut()" color="accent" mat-flat-button>
+      <button i18n (click)="signOut()" color="accent" mat-flat-button>
         Log out
       </button>
       }

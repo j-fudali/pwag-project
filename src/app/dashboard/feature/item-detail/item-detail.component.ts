@@ -43,17 +43,16 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
     </mat-card-header>
     <mat-card-content>
       <div>
-        @for (item of content() | keyvalue; track item.key) {
-        <span class="item-attribute">
-          <b>{{ item.key | titlecase }}</b
-          >:
-          {{
-            item.key == 'condition'
-              ? (item.value.toString() | appMapConditions)
-              : item.value
-          }}
-        </span>
-        }
+        <span><b i18n>Amount</b>: {{ content()?.amount }}</span>
+        <span
+          ><b i18n>Condition</b>:
+          {{ content()?.condition!.toString() | appMapConditions }}</span
+        >
+        <span><b i18n>Cost</b>: {{ content()?.cost }}</span>
+        <span><b i18n>Total</b>: {{ content()?.cost }}</span>
+        <span><b i18n>Information</b>: {{ content()?.info }}</span>
+        <span><b i18n>Modified</b>: {{ content()?.modified }}</span>
+        <span><b i18n>Modified By</b>: {{ content()?.modifiedBy }}</span>
       </div>
       <mat-list>
         @for(invoice of item()?.invoices; track $index){
@@ -69,6 +68,7 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
     <mat-card-footer>
       <mat-card-actions>
         <button
+          i18n
           mat-stroked-button
           [disabled]="
             editLoading() === 'loading' || deleteLoading() === 'loading'
@@ -79,6 +79,7 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
           Edit
         </button>
         <button
+          i18n
           mat-flat-button
           [disabled]="
             editLoading() === 'loading' || deleteLoading() === 'loading'
@@ -103,6 +104,8 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   private _breakpointsService = inject(BreakpointsService);
   private _sourcesService = inject(SourcesService);
   private extractFilenamePipe = inject(ExtractFilenamePipe);
+  private url = location.href;
+  private isPolish = this.url.includes('4201');
   isGtSm = this._breakpointsService.isGtSm;
   id = input.required<string>();
   item = this._itemsService.state.selectedItem;
@@ -110,8 +113,10 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   deleteLoading = this._itemsService.state.itemDeleted;
   content = computed(() => {
     if (this.item()) {
-      const { name, model, invoices, source, ...rest } = this.item()!;
-      return rest;
+      const { name, model, invoices, source, cost, amount, ...rest } =
+        this.item()!;
+      const total = cost * amount;
+      return { total, cost, amount, ...rest };
     }
     return null;
   });
@@ -127,11 +132,12 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
         isGtSm: this.isGtSm,
         sources: this._sourcesService.state.sources,
         initialData: this.item,
+        isPolish: this.isPolish,
       },
     });
-    ref
-      .afterClosed()
-      .subscribe(({ item, invoicesToRemove, initialInvoices }) => {
+    ref.afterClosed().subscribe((data) => {
+      if (data) {
+        const { item, invoicesToRemove, initialInvoices } = data;
         if (item && invoicesToRemove) {
           this._itemsService.edit$.next({
             ...item,
@@ -140,7 +146,8 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
             id: this.id(),
           });
         }
-      });
+      }
+    });
   }
   delete() {
     this._itemsService.delete$.next({

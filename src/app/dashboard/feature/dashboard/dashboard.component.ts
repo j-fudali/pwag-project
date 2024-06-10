@@ -68,11 +68,11 @@ export class DashboardComponent {
   sidenavOpened = false;
   navigations = [
     {
-      label: 'Dashboard',
+      label: $localize`Dashboard`,
       routerLink: '/',
     },
     {
-      label: 'Users',
+      label: $localize`Users`,
       routerLink: 'users',
     },
   ];

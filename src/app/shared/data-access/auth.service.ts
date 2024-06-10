@@ -4,6 +4,7 @@ import {
   Auth,
   User,
   authState,
+  setPersistence,
   signInWithEmailAndPassword,
   signOut,
   user,

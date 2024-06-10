@@ -32,17 +32,28 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   template: `
     <mat-card>
       <mat-card-header>
-        <h1 mat-card-title>Log-in</h1>
+        <h1 mat-card-title i18n>Log-in</h1>
       </mat-card-header>
       <form [formGroup]="loginForm">
         <mat-card-content>
           <mat-form-field>
-            <mat-label>E-mail</mat-label>
+            <mat-label i18n>E-mail</mat-label>
             <input type="email" matInput formControlName="email" />
+            @if(email.invalid && (email.touched || email.dirty)){
+            <mat-error>
+              @if(email.hasError('email')){
+              <ng-container i18n>Invalid e-mail</ng-container>
+              } @else{
+              <ng-container i18n>Field is required </ng-container>}
+            </mat-error>
+            }
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Password</mat-label>
+            <mat-label i18n>Password</mat-label>
             <input type="password" matInput formControlName="password" />
+            @if(password.invalid && (password.touched || password.dirty)){
+            <mat-error i18n>Field is required</mat-error>
+            }
           </mat-form-field>
         </mat-card-content>
         <mat-card-actions>
@@ -53,7 +64,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
           >
             @if(status() === 'loading'){
             <mat-spinner [diameter]="30"></mat-spinner>
-            }@else { Submit }
+            }@else {<ng-container i18n>Submit</ng-container> }
           </button>
         </mat-card-actions>
       </form>
@@ -69,7 +80,7 @@ export class LoginFormComponent {
   loginForm = new FormGroup({
     email: new FormControl('', {
       nonNullable: true,
-      validators: Validators.required,
+      validators: [Validators.required, Validators.email],
     }),
     password: new FormControl('', {
       nonNullable: true,
@@ -87,7 +98,9 @@ export class LoginFormComponent {
     effect(() => {
       if (this.status() == 'error') {
         if (this.error() == 'auth/invalid-credential') {
-          this.snackbar.open('Invalid credentials', 'X', { duration: 3000 });
+          this.snackbar.open($localize`Invalid credentials`, 'X', {
+            duration: 3000,
+          });
         }
       }
     });

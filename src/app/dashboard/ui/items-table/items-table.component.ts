@@ -55,20 +55,42 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
   template: `
     @if(mappedItems().length > 0){
     <table mat-table multiTemplateDataRows [dataSource]="mappedItems()">
-      @for (column of displayedColumns(); track column) {
-      <ng-container matColumnDef="{{ column }}">
-        <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+      <ng-container matColumnDef="name">
+        <th i18n mat-header-cell *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let element">
-          {{
-            column == 'source'
-              ? element[column].name
-              : column == 'condition'
-              ? (element[column] | appMapConditions)
-              : element[column]
-          }}
+          {{ element['name'] }}
         </td>
       </ng-container>
-      }
+      <ng-container matColumnDef="model">
+        <th i18n mat-header-cell *matHeaderCellDef>Model</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element['model'] }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="cost">
+        <th i18n mat-header-cell *matHeaderCellDef>Cost</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element['cost'] }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="amount">
+        <th i18n mat-header-cell *matHeaderCellDef>Amount</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element['amount'] }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="total">
+        <th i18n mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element['total'] }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="source">
+        <th i18n mat-header-cell *matHeaderCellDef>Source</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element['source'].name }}
+        </td>
+      </ng-container>
 
       <ng-container matColumnDef="expandedDetail">
         <td
@@ -84,22 +106,34 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
           >
             <div class="element-info">
               <div>
-                @for(column of displayedColumnsExpanded(); track column){
                 <div>
-                  <span>{{ column }}: </span>
-                  <span>
-                    {{
-                      column == 'source'
-                        ? element[column].name
-                        : column == 'condition'
-                        ? (element[column] | appMapConditions)
-                        : element[column]
-                    }}</span
-                  >
+                  <span i18n>Total</span>
+                  <span>{{ element['total'] }}</span>
                 </div>
-                }
+                <div>
+                  <span i18n>Source</span>
+                  <span>{{ element['source'].name }}</span>
+                </div>
+                <div>
+                  <span i18n>Condition</span>
+                  <span>{{ element['condition'] | appMapConditions }}</span>
+                </div>
+                <div>
+                  <span i18n>Modified</span>
+                  <span>{{ element['modified'] }}</span>
+                </div>
+                <div>
+                  <span i18n>Modified by</span>
+                  <span>{{ element['modifiedBy'] }}</span>
+                </div>
+                <div>
+                  <span i18n>Information</span>
+                  <span>{{ element['info'] }}</span>
+                </div>
               </div>
-              <a mat-stroked-button [routerLink]="[element['id']]">Details</a>
+              <a i18n mat-stroked-button [routerLink]="[element['id']]"
+                >Details</a
+              >
             </div>
           </div>
         </td>
@@ -120,7 +154,7 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
       ></tr>
     </table>
     } @else {
-    <h3>No items found</h3>
+    <h3 i18n>No items found</h3>
     }
   `,
   styleUrl: './items-table.component.scss',

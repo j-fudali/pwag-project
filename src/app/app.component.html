@@ -1,1 +1,8 @@
+<button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>language</mat-icon>
+</button>
+<mat-menu #menu>
+    <a mat-menu-item href="http://localhost:4201">PL</a>
+    <a mat-menu-item href="http://localhost:4200">ENG</a>
+</mat-menu>
 <router-outlet></router-outlet>

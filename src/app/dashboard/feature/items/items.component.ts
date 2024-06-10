@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,6 +20,7 @@ import { FiltersComponent } from '../../ui/filters/filters.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-items',
@@ -35,7 +36,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     @if(itemAdded() === 'loading'){
     <mat-progress-bar mode="indeterminate" />
     }
-    <button class="add-item" mat-raised-button (click)="addItem()">
+    <button i18n class="add-item" mat-raised-button (click)="addItem()">
       Add item
     </button>
     <app-filters
@@ -59,6 +60,8 @@ export class ItemsComponent {
   private _itemsService = inject(ItemsService);
   private _breakpointObs = inject(BreakpointObserver);
   private dialog = inject(MatDialog);
+  private url = location.href;
+  private isPolish = this.url.includes('4201');
   itemAdded = this._itemsService.state.itemAdded;
   items = this._itemsService.state.items;
   sources = this._sourcesService.state.sources;
@@ -72,8 +75,13 @@ export class ItemsComponent {
   source: string = '';
 
   addItem() {
+    console.log(this.url);
     const dialogRef = this.dialog.open(ItemDialogComponent, {
-      data: { isGtSm: this.isGtSm, sources: this.sources },
+      data: {
+        isGtSm: this.isGtSm,
+        sources: this.sources,
+        isPolish: this.isPolish,
+      },
     });
     dialogRef
       .afterClosed()
