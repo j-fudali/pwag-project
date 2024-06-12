@@ -75,6 +75,10 @@ export class DashboardComponent {
       label: $localize`Users`,
       routerLink: 'users',
     },
+    {
+      label: $localize`Sources`,
+      routerLink: 'sources',
+    },
   ];
   currentUser = this._authService.state.user;
   constructor() {

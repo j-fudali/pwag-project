@@ -276,14 +276,16 @@ export class ItemsService {
         idField: 'id',
       }) as Observable<Source>
     ).pipe(
-      map(
-        (source) =>
-          ({
-            ...i,
-            source: source,
-            modified: i.modified.toDate().toLocaleDateString(),
-          } as Item)
-      )
+      map((source) => {
+        return {
+          ...i,
+          source: source || {
+            name: $localize`UNKNOWN`,
+            name_pl: $localize`UNKNOWN`,
+          },
+          modified: i.modified.toDate().toLocaleDateString(),
+        } as Item;
+      })
     );
   }
 }
