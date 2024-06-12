@@ -48,7 +48,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
               [disabled]="newSource === '' || newSourcePl === ''"
               matSuffix
               mat-icon-button
-              i18n
               (click)="add()"
             >
               <mat-icon>add</mat-icon>
@@ -81,7 +80,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class SourcesComponent {
   selectionList = viewChild.required<MatSelectionList>('selectionList');
   private _sourcesService = inject(SourcesService);
-  private snackbar = inject(MatSnackBar);
   private url = location.href;
   isPolish = this.url.includes('4201');
   sources = this._sourcesService.state.sources;

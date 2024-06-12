@@ -55,6 +55,61 @@
       }
     ]
   },
+    "3169427932576895164": "NIEZNANY",
+  "@3169427932576895164": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\data-access\\items.service.ts",
+        "start": { "line": "282", "column": "27" },
+        "end": { "line": "282", "column": "36" }
+      },
+      {
+        "file": "src\\app\\dashboard\\data-access\\items.service.ts",
+        "start": { "line": "283", "column": "30" },
+        "end": { "line": "283", "column": "39" }
+      }
+    ]
+  },
+  "1363475272519247457": "Źródła usunięto",
+  "@1363475272519247457": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\data-access\\sources.service.ts",
+        "start": { "line": "52", "column": "34" },
+        "end": { "line": "52", "column": "51" }
+      }
+    ]
+  },
+  "137818692208572018": "Nie można usunąć źródeł",
+  "@137818692208572018": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\data-access\\sources.service.ts",
+        "start": { "line": "55", "column": "34" },
+        "end": { "line": "55", "column": "56" }
+      }
+    ]
+  },
+  "5130389281436234715": "Źródło dodane",
+  "@5130389281436234715": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\data-access\\sources.service.ts",
+        "start": { "line": "68", "column": "34" },
+        "end": { "line": "68", "column": "48" }
+      }
+    ]
+  },
+  "7958372652064320288": "Nie można dodać źródła",
+  "@7958372652064320288": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\data-access\\sources.service.ts",
+        "start": { "line": "71", "column": "34" },
+        "end": { "line": "71", "column": "53" }
+      }
+    ]
+  },
   "7858768589576583715": "Niepoprawne dane",
   "@7858768589576583715": {
     "x-locations": [
@@ -285,6 +340,21 @@
       }
     ]
   },
+  "3998597663055219440": "Źródła",
+  "@3998597663055219440": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\feature\\dashboard\\dashboard.component.ts",
+        "start": { "line": "78", "column": "22" },
+        "end": { "line": "78", "column": "31" }
+      },
+      {
+        "file": "src\\app\\dashboard\\feature\\sources\\sources.component.ts",
+        "start": { "line": "35", "column": "38" },
+        "end": { "line": "35", "column": "47" }
+      }
+    ]
+  },
   "6533918067030990396": "Liczba",
   "@6533918067030990396": {
     "x-locations": [
@@ -315,8 +385,8 @@
       },
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "89", "column": "35" },
-        "end": { "line": "89", "column": "46" }
+        "start": { "line": "91", "column": "35" },
+        "end": { "line": "91", "column": "46" }
       },
       {
         "file": "src\\app\\dashboard\\ui\\items-table\\items-table.component.ts",
@@ -370,8 +440,8 @@
       },
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "97", "column": "35" },
-        "end": { "line": "97", "column": "48" }
+        "start": { "line": "99", "column": "35" },
+        "end": { "line": "99", "column": "48" }
       },
       {
         "file": "src\\app\\dashboard\\ui\\items-table\\items-table.component.ts",
@@ -430,8 +500,38 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\feature\\items\\items.component.ts",
-        "start": { "line": "38", "column": "8" },
-        "end": { "line": "39", "column": "5" }
+        "start": { "line": "39", "column": "8" },
+        "end": { "line": "40", "column": "5" }
+      }
+    ]
+  },
+  "2437959718409217676": "Nowe źródło",
+  "@2437959718409217676": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\feature\\sources\\sources.component.ts",
+        "start": { "line": "40", "column": "37" },
+        "end": { "line": "40", "column": "49" }
+      }
+    ]
+  },
+  "978058228925126857": "Nowe źródło (Polski)",
+  "@978058228925126857": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\feature\\sources\\sources.component.ts",
+        "start": { "line": "44", "column": "37" },
+        "end": { "line": "44", "column": "58" }
+      }
+    ]
+  },
+  "6034715413986326905": "Brak źródeł!",
+  "@6034715413986326905": {
+    "x-locations": [
+      {
+        "file": "src\\app\\dashboard\\feature\\sources\\sources.component.ts",
+        "start": { "line": "66", "column": "26" },
+        "end": { "line": "67", "column": "5" }
       }
     ]
   },
@@ -505,8 +605,8 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "91", "column": "49" },
-        "end": { "line": "91", "column": "53" }
+        "start": { "line": "93", "column": "49" },
+        "end": { "line": "93", "column": "53" }
       }
     ]
   },
@@ -515,8 +615,8 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "92", "column": "55" },
-        "end": { "line": "92", "column": "65" }
+        "start": { "line": "94", "column": "55" },
+        "end": { "line": "94", "column": "65" }
       }
     ]
   },
@@ -525,8 +625,8 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "93", "column": "53" },
-        "end": { "line": "93", "column": "61" }
+        "start": { "line": "95", "column": "53" },
+        "end": { "line": "95", "column": "61" }
       }
     ]
   },
@@ -535,8 +635,8 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "102", "column": "28" },
-        "end": { "line": "103", "column": "3" }
+        "start": { "line": "104", "column": "28" },
+        "end": { "line": "105", "column": "3" }
       }
     ]
   },
@@ -545,8 +645,8 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "144", "column": "67" },
-        "end": { "line": "144", "column": "75" }
+        "start": { "line": "146", "column": "67" },
+        "end": { "line": "146", "column": "75" }
       }
     ]
   },
@@ -555,8 +655,8 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "156", "column": "62" },
-        "end": { "line": "157", "column": "1" }
+        "start": { "line": "158", "column": "62" },
+        "end": { "line": "159", "column": "1" }
       }
     ]
   },
@@ -565,8 +665,8 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "168", "column": "36" },
-        "end": { "line": "168", "column": "42" }
+        "start": { "line": "170", "column": "36" },
+        "end": { "line": "170", "column": "42" }
       }
     ]
   },
@@ -575,8 +675,8 @@
     "x-locations": [
       {
         "file": "src\\app\\dashboard\\ui\\item-dialog\\item-dialog.component.ts",
-        "start": { "line": "170", "column": "36" },
-        "end": { "line": "170", "column": "41" }
+        "start": { "line": "172", "column": "36" },
+        "end": { "line": "172", "column": "41" }
       }
     ]
   },
