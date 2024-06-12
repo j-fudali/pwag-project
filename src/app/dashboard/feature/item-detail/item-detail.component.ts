@@ -58,7 +58,7 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
         @for(invoice of item()?.invoices; track $index){
         <mat-list-item>
           <mat-icon matListItemIcon>note</mat-icon>
-          <a [href]="invoice" download matListItemTitle
+          <a target="_blank" [href]="invoice" download matListItemTitle
             ><span>{{ invoice | appExtractFilename : true }}</span></a
           >
         </mat-list-item>

@@ -75,7 +75,6 @@ export class ItemsComponent {
   source: string = '';
 
   addItem() {
-    console.log(this.url);
     const dialogRef = this.dialog.open(ItemDialogComponent, {
       data: {
         isGtSm: this.isGtSm,
