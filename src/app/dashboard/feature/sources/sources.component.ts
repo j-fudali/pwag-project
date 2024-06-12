@@ -87,26 +87,7 @@ export class SourcesComponent {
   sources = this._sourcesService.state.sources;
   newSource = '';
   newSourcePl = '';
-  constructor() {
-    effect(() => {
-      if (this._sourcesService.state.onAdd() === 'success') {
-        this.snackbar.open($localize`Source added`, 'X', { duration: 3000 });
-      }
-      if (this._sourcesService.state.onAdd() === 'error') {
-        this.snackbar.open($localize`Source not added`, 'X', {
-          duration: 3000,
-        });
-      }
-      if (this._sourcesService.state.onDeleteMany() === 'success') {
-        this.snackbar.open($localize`Sources deleted`, 'X', { duration: 3000 });
-      }
-      if (this._sourcesService.state.onDeleteMany() === 'error') {
-        this.snackbar.open($localize`Sources not deleted`, 'X', {
-          duration: 3000,
-        });
-      }
-    });
-  }
+
   add() {
     if (this.newSource.length > 0 && this.newSourcePl.length > 0) {
       this._sourcesService.add$.next({

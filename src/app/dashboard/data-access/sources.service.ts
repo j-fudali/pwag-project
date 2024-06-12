@@ -21,6 +21,7 @@ import {
   of,
   shareReplay,
   switchMap,
+  tap,
 } from 'rxjs';
 import { FirebaseError } from '@angular/fire/app';
 import { Source } from '../../shared/interfaces/Source';
@@ -28,10 +29,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface SourcesState {
   sources: Signal<Source[]>;
-  status: Signal<'success' | 'error' | null>;
+  status: Signal<'success' | 'error' | 'deleted' | 'added' | null>;
   error: Signal<string | null>;
-  onDeleteMany: Signal<'success' | 'error' | null>;
-  onAdd: Signal<'success' | 'error' | null>;
 }
 
 @Injectable()
@@ -50,25 +49,32 @@ export class SourcesService {
     switchMap((ids) =>
       forkJoin(ids.map((id) => deleteDoc(doc(this.firestore, `sources/${id}`))))
     ),
-    map(() => 'success' as const),
-    catchError((err) => {
+    tap(() =>
+      this.snackbar.open($localize`Sources deleted`, 'X', { duration: 3000 })
+    ),
+    catchError(() => {
       this.snackbar.open($localize`Cannot delete source`, 'X', {
         duration: 3000,
       });
       return of('error' as const);
-    })
+    }),
+    shareReplay(1)
   );
   private onAdd$ = this.add$.pipe(
     switchMap(({ newSource, newSourcePl }) =>
       addDoc(this.sourcesCollection, { name: newSource, name_pl: newSourcePl })
     ),
-    map(() => 'success' as const),
-    catchError((err) => {
+
+    tap(() =>
+      this.snackbar.open($localize`Source added`, 'X', { duration: 3000 })
+    ),
+    catchError(() => {
       this.snackbar.open($localize`Cannot add source`, 'X', {
         duration: 3000,
       });
       return of('error' as const);
-    })
+    }),
+    shareReplay(1)
   );
 
   private sources$ = (
@@ -94,6 +100,8 @@ export class SourcesService {
       filter((sources) => sources!.length > 0),
       map(() => 'success' as const)
     ),
+    this.onAdd$.pipe(map(() => 'added' as const)),
+    this.onDeleteMany$.pipe(map(() => 'deleted' as const)),
     this.error$.pipe(map(() => 'error' as const))
   );
   private sources = toSignal(this.sources$, { initialValue: [] });
@@ -112,7 +120,5 @@ export class SourcesService {
     sources: this.sources,
     status: this.status,
     error: this.error,
-    onDeleteMany: this.onDeleteMany,
-    onAdd: this.onAdd,
   };
 }
