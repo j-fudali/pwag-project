@@ -193,7 +193,8 @@ export class ItemsService {
         })
       ),
       map(() => 'success' as const),
-      catchError(() => {
+      catchError((err) => {
+        console.log(err);
         this.snackbar.open($localize`Item has been not edited`, 'X', {
           duration: 3000,
         });

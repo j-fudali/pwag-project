@@ -21,6 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../shared/data-access/auth.service';
 
 @Component({
   selector: 'app-items',
@@ -35,10 +36,11 @@ import { Router } from '@angular/router';
   template: `
     @if(itemAdded() === 'loading'){
     <mat-progress-bar mode="indeterminate" />
-    }
+    } @if(user()?.isAdmin){
     <button i18n class="add-item" mat-raised-button (click)="addItem()">
       Add item
     </button>
+    }
     <app-filters
       [sources]="sources()"
       [isGtSm]="isGtSm()"
@@ -57,11 +59,13 @@ import { Router } from '@angular/router';
 })
 export class ItemsComponent {
   private _sourcesService = inject(SourcesService);
+  private _authService = inject(AuthService);
   private _itemsService = inject(ItemsService);
   private _breakpointObs = inject(BreakpointObserver);
   private dialog = inject(MatDialog);
   private url = location.href;
   private isPolish = this.url.includes('4201');
+  user = this._authService.state.user;
   itemAdded = this._itemsService.state.itemAdded;
   items = this._itemsService.state.items;
   sources = this._sourcesService.state.sources;

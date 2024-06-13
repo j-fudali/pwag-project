@@ -22,6 +22,7 @@ import { SourcesService } from '../../data-access/sources.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
+import { AuthService } from '../../../shared/data-access/auth.service';
 @Component({
   selector: 'app-item-detail',
   standalone: true,
@@ -43,13 +44,20 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
     </mat-card-header>
     <mat-card-content>
       <div>
-        <span><b i18n>Amount</b>: {{ content()?.amount }}</span>
         <span
           ><b i18n>Condition</b>:
           {{ content()?.condition!.toString() | appMapConditions }}</span
         >
-        <span><b i18n>Cost</b>: {{ content()?.cost }}</span>
-        <span><b i18n>Total</b>: {{ content()?.cost }}</span>
+        <span><b i18n>Amount</b>: {{ content()?.amount }}</span>
+
+        <span><b i18n>Cost</b>: {{ content()?.cost }} zł</span>
+        <span><b i18n>Total</b>: {{ content()?.total }} zł</span>
+        <span
+          ><b i18n>Source</b>:
+          {{
+            isPolish ? content()?.source?.name_pl : content()?.source?.name
+          }}</span
+        >
         <span><b i18n>Information</b>: {{ content()?.info }}</span>
         <span><b i18n>Modified</b>: {{ content()?.modified }}</span>
         <span><b i18n>Modified By</b>: {{ content()?.modifiedBy }}</span>
@@ -67,6 +75,7 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
     </mat-card-content>
     <mat-card-footer>
       <mat-card-actions>
+        @if(user()?.isAdmin){
         <button
           i18n
           mat-stroked-button
@@ -89,6 +98,7 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
         >
           Delete
         </button>
+        }
       </mat-card-actions>
       @if(!item() || editLoading() == 'loading' || deleteLoading() ===
       'loading'){
@@ -99,13 +109,15 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
   styleUrl: './item-detail.component.scss',
 })
 export class ItemDetailComponent implements OnInit, OnDestroy {
+  private _authService = inject(AuthService);
   private _itemsService = inject(ItemsService);
   private dialog = inject(MatDialog);
   private _breakpointsService = inject(BreakpointsService);
   private _sourcesService = inject(SourcesService);
   private extractFilenamePipe = inject(ExtractFilenamePipe);
   private url = location.href;
-  private isPolish = this.url.includes('4201');
+  isPolish = this.url.includes('4201');
+  user = this._authService.state.user;
   isGtSm = this._breakpointsService.isGtSm;
   id = input.required<string>();
   item = this._itemsService.state.selectedItem;
@@ -116,7 +128,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
       const { name, model, invoices, source, cost, amount, ...rest } =
         this.item()!;
       const total = cost * amount;
-      return { total, cost, amount, ...rest };
+      return { total, cost, source, amount, ...rest };
     }
     return null;
   });

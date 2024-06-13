@@ -69,9 +69,7 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
       </ng-container>
       <ng-container matColumnDef="cost">
         <th i18n mat-header-cell *matHeaderCellDef>Cost</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element['cost'] }}
-        </td>
+        <td mat-cell *matCellDef="let element">{{ element['cost'] }} zł</td>
       </ng-container>
       <ng-container matColumnDef="amount">
         <th i18n mat-header-cell *matHeaderCellDef>Amount</th>
@@ -81,14 +79,12 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
       </ng-container>
       <ng-container matColumnDef="total">
         <th i18n mat-header-cell *matHeaderCellDef>Total</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element['total'] }}
-        </td>
+        <td mat-cell *matCellDef="let element">{{ element['total'] }} zł</td>
       </ng-container>
       <ng-container matColumnDef="source">
         <th i18n mat-header-cell *matHeaderCellDef>Source</th>
         <td mat-cell *matCellDef="let element">
-          {{ element['source'].name }}
+          {{ isPolish ? element['source'].name_pl : element['source'].name }}
         </td>
       </ng-container>
 
@@ -108,11 +104,15 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
               <div>
                 <div>
                   <span i18n>Total</span>
-                  <span>{{ element['total'] }}</span>
+                  <span>{{ element['total'] }} zł</span>
                 </div>
                 <div>
                   <span i18n>Source</span>
-                  <span>{{ element['source'].name }}</span>
+                  <span>{{
+                    isPolish
+                      ? element['source'].name_pl
+                      : element['source'].name
+                  }}</span>
                 </div>
                 <div>
                   <span i18n>Condition</span>
@@ -161,6 +161,8 @@ import { MapConditionsPipe } from '../../utils/map-conditions.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemsTableComponent {
+  private url = location.href;
+  isPolish = this.url.includes('4201');
   columns = [
     'name',
     'model',

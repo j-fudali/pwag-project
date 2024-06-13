@@ -56,7 +56,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
         </div>
         @if(sources().length > 0){
         <mat-selection-list #selectionList>
-          @for (source of sources(); track sources) {
+          @for (source of sources(); track $index) {
           <mat-list-option [value]="source.id">{{
             isPolish ? source.name_pl : source.name
           }}</mat-list-option>

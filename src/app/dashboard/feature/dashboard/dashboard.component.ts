@@ -31,7 +31,7 @@ import { AuthService } from '../../../shared/data-access/auth.service';
         [mode]="mode()"
       >
         <mat-nav-list>
-          @for (nav of navigations; track nav) {
+          @for (nav of navigations(); track nav) {
           <a
             (click)="!isGtSm() ? sidenav.close() : null"
             mat-list-item
@@ -66,20 +66,30 @@ export class DashboardComponent {
   isGtSm = this._breakpointsService.isGtSm;
   mode = computed(() => (this.isGtSm() ? 'side' : 'over'));
   sidenavOpened = false;
-  navigations = [
-    {
-      label: $localize`Dashboard`,
-      routerLink: '/',
-    },
-    {
-      label: $localize`Users`,
-      routerLink: 'users',
-    },
-    {
-      label: $localize`Sources`,
-      routerLink: 'sources',
-    },
-  ];
+  navigations = computed(() => {
+    if (this._authService.state.user()?.isAdmin) {
+      return [
+        {
+          label: $localize`Dashboard`,
+          routerLink: '/',
+        },
+        {
+          label: $localize`Users`,
+          routerLink: 'users',
+        },
+        {
+          label: $localize`Sources`,
+          routerLink: 'sources',
+        },
+      ];
+    }
+    return [
+      {
+        label: $localize`Dashboard`,
+        routerLink: '/',
+      },
+    ];
+  });
   currentUser = this._authService.state.user;
   constructor() {
     effect(() => {
